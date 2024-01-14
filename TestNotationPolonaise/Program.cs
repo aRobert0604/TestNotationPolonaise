@@ -9,6 +9,67 @@ namespace TestNotationPolonaise
 {
     class Program
     {
+        static float Polonaise(string formule)
+        {
+            try
+            {
+                // Transformation de la formule en vecteur
+                string[] elements = formule.Split(' ');
+                int nbCases = elements.Length;
+
+                // Boucle tant qu'il y a plus d'une case
+                while (nbCases > 1)
+                {
+                    // Recherche d'un signe à partir de la fin
+                    int k = nbCases - 1;
+                    while (elements[k] != "+" && elements[k] != "-" && elements[k] != "*" && elements[k] != "/")
+                    {
+                        k--;
+                    }
+
+                    // Récupération des deux valeurs concernés par le calcul
+                    float nb1 = float.Parse(elements[k + 1]);
+                    float nb2 = float.Parse(elements[k + 2]);
+
+                    // Calcul
+                    float resultat = 0;
+                    switch (elements[k])
+                    {
+                        case "+": resultat = nb1 + nb2; break;
+                        case "-": resultat = nb1 - nb2; break;
+                        case "*": resultat = nb1 * nb2; break;
+                        case "/":
+                            // Eviter la division par 0
+                            if (nb2 == 0)
+                            {
+                                return float.NaN;
+                            }
+                            resultat = nb1 / nb2; break;
+                    }
+                    // Stockage du résultat à la place du signe
+                    elements[k] = resultat.ToString();
+
+                    // Suppression des valeurs suivantes par le décalage vers la gauche
+                    for (int j = k + 1; j < nbCases - 2; j++)
+                    {
+                        elements[j] = elements[j + 2];
+                    }
+
+                    // Remplacement des deux dernières cases par un espace
+                    for (int j = nbCases - 2; j < nbCases; j++)
+                    {
+                        elements[j] = " ";
+                    }
+                    nbCases = nbCases - 2;
+                }
+                return (float.Parse(elements[0]));
+            }
+            catch
+            {
+                // Erreur rencontrée
+                return float.NaN;
+            }
+        }
         /// <summary>
         /// saisie d'une réponse d'un caractère parmi 2
         /// </summary>
